@@ -1,4 +1,10 @@
 export default function(app) {
+
+  // API ROUTES
+
+  //////////////////////////////////////////////
+  //TEST ROUTE
+  //////////////////////////////////////////////
   app.get('/test', (req,res) => {
     res.send('hello!');
   });
