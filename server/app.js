@@ -1,7 +1,9 @@
 import express from 'express';
 import path from 'path';
 import slackRoutes from './routes/slackRoutes';
-import redis from './db/redis';
+import redis from './db/redisClient';
+
+redis.flushall();
 
 const app = express();
 const port = process.env.PORT || 8020;
