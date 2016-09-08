@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { isURL } from 'validator';
+import redis from '../db/utils';
 
 export default function(app) {
-
   //API ROUTES
 
   //////////////////////////////////////////////
@@ -18,6 +18,7 @@ export default function(app) {
       if (obj.attachments) {
         if (obj.attachments[0].title) {
           links[obj.attachments[0].title] = obj.attachments[0].title_link;
+          redis.addUrl('urls', obj.attachments[0].title, obj.attachments[0].title_link);
         }
       } else {
           //If url is enclosed in carrots remove them
@@ -27,6 +28,7 @@ export default function(app) {
           //Check to see if text is valid url
           if (isURL(obj.text)) {
             links[obj.text] = obj.text;
+            redis.addUrl('urls', obj.text, obj.text);
           }
       }
     };
@@ -38,6 +40,7 @@ export default function(app) {
           for (let keys in obj) {
             if (keys === 'attachments') {
               links[obj[keys][0].title] = obj[keys][0].title_link;
+              redis.addUrl('urls', obj[keys][0].title, obj[keys][0].title_link);
             } else if (keys === 'previous') {
                 parseData(obj[keys]);
             } else if (keys === 'previous_2') {
