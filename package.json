@@ -1,7 +1,7 @@
 {
   "name": "zero",
   "version": "1.0.0",
-  "description": "Zero searches your slack channel for url's, and adds them to a google doc.",
+  "description": "Zero searches your slack channel for url's and saves them to a database.",
   "main": "app.js",
   "scripts": {
     "dev:start": "nodemon ./server/app.js --exec babel-node --presets es2015,stage-2 & lt --port 8020",
@@ -24,6 +24,8 @@
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-stage-2": "^6.13.0",
     "express": "^4.14.0",
+    "redis": "^2.6.2",
+    "validator": "^5.6.0",
     "webpack": "^1.13.2"
   }
 }
