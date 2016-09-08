@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { isURL } from 'validator';
 
 export default function(app) {
 
-  // API ROUTES
+  //API ROUTES
 
   //////////////////////////////////////////////
   //SLACK MESSAGE DATA ROUTE
@@ -15,16 +16,22 @@ export default function(app) {
     //Parse slack data and add key:value pairs to links
     const parseData = (obj) => {
       if (obj.attachments) {
-        // TODO: need regex to see if text is url or not
         if (obj.attachments[0].title) {
           links[obj.attachments[0].title] = obj.attachments[0].title_link;
         }
       } else {
-        links[obj.text] = obj.text;
+          //If url is enclosed in carrots remove them
+          if (obj.text[0] === '<') {
+            obj.text = obj.text.slice(1,obj.text.length-1);
+          }
+          //Check to see if text is valid url
+          if (isURL(obj.text)) {
+            links[obj.text] = obj.text;
+          }
       }
     };
     
-    // GET request to slack api endpoint
+    //GET request to slack api endpoint for all messages containing http
     axios.get(`https://slack.com/api/search.messages?token=${process.env.SLACK_TOKEN}&query=http&pretty=1`)
       .then((response) => {
         response.data.messages.matches.forEach((obj) => {
