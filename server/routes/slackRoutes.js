@@ -2,15 +2,14 @@ import axios from 'axios';
 import { isURL } from 'validator';
 import redis from '../db/utils';
 
-export default function(app) {
-  //API ROUTES
+//API ROUTES
+export default (app) => {
 
   //////////////////////////////////////////////
   //SLACK MESSAGE DATA ROUTE
   //////////////////////////////////////////////
   app.get('/messages', (req,res) => {
 
-    //TODO: add to db instead of links object
     const links = {};
 
     //Parse slack data and add key:value pairs to links
