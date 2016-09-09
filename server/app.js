@@ -3,7 +3,7 @@ import path from 'path';
 import slackRoutes from './routes/slackRoutes';
 import redis from './db/redisClient';
 
-redis.flushall();
+redis.flushall(); // Deletes everything in DB when loading - Needed?
 
 const app = express();
 const port = process.env.PORT || 8020;
