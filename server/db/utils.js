@@ -1,7 +1,7 @@
 import client from './redisClient';
 import { isURL } from 'validator';
 
-//Parse slack data and add field/value pairs to urls hash
+//Parse slack response
 const parseData = (obj) => {
   if (obj.attachments) {
     if (obj.attachments[0].title) {
@@ -19,10 +19,10 @@ const parseData = (obj) => {
   }
 };
 
-//Add url
+//Add url to hash
 const addUrl = (key, field, val) => {
-  client.on("error", (err) => { console.log("Error " + err);});
-  client.set("string field", "string val");
+  client.on('error', (err) => { console.log('Error ' + err);});
+  client.set('string field', 'string val');
   client.hset(key, field, val);
 };
 

@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { parseData, addUrl } from '../db/utils';
+import { addUrl, parseData } from '../db/utils';
 
 //API ROUTES
 const slackRoutes = (app) => {
   //////////////////////////////////////////////
-  //SLACK MESSAGE DATA ROUTE
+  //SLACK MESSAGES ROUTE
   //////////////////////////////////////////////
   app.get('/messages', (req,res) => {
     //GET request to slack API endpoint for all messages containing search query
@@ -28,10 +28,10 @@ const slackRoutes = (app) => {
         res.send(JSON.stringify('test'));
       })
       .catch((err) => {
-        console.log(`error: ${err}`);
+        console.log(`Error: ${err}`);
       });
   });
-  
+
 };
 
 export default slackRoutes;
