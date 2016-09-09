@@ -1,4 +1,23 @@
 import client from './redisClient';
+import { isURL } from 'validator';
+
+//Parse slack data and add field/value pairs to urls hash
+const parseData = (obj) => {
+  if (obj.attachments) {
+    if (obj.attachments[0].title) {
+      addUrl('urls', obj.attachments[0].title, obj.attachments[0].title_link);
+    }
+  } else {
+      //If url is enclosed in carrots remove them
+      if (obj.text[0] === '<') {
+        obj.text = obj.text.slice(1,obj.text.length-1);
+      }
+      //Check to see if text is valid url
+      if (isURL(obj.text)) {
+        addUrl('urls', obj.text, obj.text);
+      }
+  }
+};
 
 //Add url
 const addUrl = (key, field, val) => {
@@ -14,5 +33,4 @@ const getUrls = (key) => {
   });
 };
 
-
-export default { addUrl, getUrls };
+export { parseData, addUrl, getUrls };

@@ -1,62 +1,37 @@
 import axios from 'axios';
-import { isURL } from 'validator';
-import redis from '../db/utils';
+import { parseData, addUrl } from '../db/utils';
 
 //API ROUTES
-export default (app) => {
-
+const slackRoutes = (app) => {
   //////////////////////////////////////////////
   //SLACK MESSAGE DATA ROUTE
   //////////////////////////////////////////////
   app.get('/messages', (req,res) => {
-
-    const links = {};
-
-    //Parse slack data and add key:value pairs to links
-    const parseData = (obj) => {
-      if (obj.attachments) {
-        if (obj.attachments[0].title) {
-          links[obj.attachments[0].title] = obj.attachments[0].title_link;
-          redis.addUrl('urls', obj.attachments[0].title, obj.attachments[0].title_link);
-        }
-      } else {
-          //If url is enclosed in carrots remove them
-          if (obj.text[0] === '<') {
-            obj.text = obj.text.slice(1,obj.text.length-1);
-          }
-          //Check to see if text is valid url
-          if (isURL(obj.text)) {
-            links[obj.text] = obj.text;
-            redis.addUrl('urls', obj.text, obj.text);
-          }
-      }
-    };
-    
-    //GET request to slack api endpoint for all messages containing http
+    //GET request to slack API endpoint for all messages containing search query
     axios.get(`https://slack.com/api/search.messages?token=${process.env.SLACK_TOKEN}&query=http&pretty=1`)
       .then((response) => {
-        response.data.messages.matches.forEach((obj) => {
-          for (let keys in obj) {
-            if (keys === 'attachments') {
-              links[obj[keys][0].title] = obj[keys][0].title_link;
-              redis.addUrl('urls', obj[keys][0].title, obj[keys][0].title_link);
-            } else if (keys === 'previous') {
-                parseData(obj[keys]);
-            } else if (keys === 'previous_2') {
-                parseData(obj[keys]);
-            } else if (keys === 'next') {
-                parseData(obj[keys]);
-            } else if (keys === 'next_2') {
-                parseData(obj[keys]);
+        response.data.messages.matches.forEach((message) => {
+          for (let key in message) {
+            if (key === 'attachments') {
+              addUrl('urls', message[key][0].title, message[key][0].title_link);
+            } else if (key === 'previous') {
+                parseData(message[key]);
+            } else if (key === 'previous_2') {
+                parseData(message[key]);
+            } else if (key === 'next') {
+                parseData(message[key]);
+            } else if (key === 'next_2') {
+                parseData(message[key]);
             }
           }
         });
-        res.send(JSON.stringify(links));
+        res.send(JSON.stringify('test'));
       })
       .catch((err) => {
         console.log(`error: ${err}`);
       });
-
   });
-
+  
 };
+
+export default slackRoutes;
