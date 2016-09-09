@@ -10,7 +10,7 @@ const parseData = (obj) => {
   } else {
       //If url is enclosed in carrots remove them
       if (obj.text[0] === '<') {
-        obj.text = obj.text.slice(1,obj.text.length-1);
+        obj.text = obj.text.replace(/[<>]/g,'');
       }
       //Check to see if text is valid url
       if (isURL(obj.text)) {
